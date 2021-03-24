@@ -1,61 +1,96 @@
 # Lunettes.jl
+##### A small Lens package for Julia
 
-## A small Lens package for Julia
-
-Lunettes is a small library for getting and setting elements in large nested
-data structures in a safe way.
+Lunettes.jl is a small package for getting and setting fields in large nested
+data structures in a safe, mutation-free, way.
 
 ## Usage
 
 The package exports one type: a `Lens{F,T}`, read: a `Lens` from `F` to `T`.
 
 ```julia
-@lens struct Missal
+@lens struct Curtain
     color::String
+    state::String
 end
 ```
 
 ```julia
-@lens struct Cruet
-    fullness::Float64
+@lens struct Window
+    frame_color::String
+    left_curtain::Curtain
+    right_curtain::Curtain
 end
 ```
+
+We have a complicated nested data structure above. Suppose we would like to manipulate this data structure, and make queries of its values.
+
+Let us define a new `Lens` as the composition of two simpler lenses.
 
 ```julia
-@lens struct Altar
-    missal::Missal
-    wine_cruet::Cruet
-    water_cruet::Cruet
-end
+left_curtain_state = Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}()
+left_curtain_color = Lens{Window,:left_curtain}() ○ Lens{Curtain,:color}()
 ```
 
-We have a complicated nested data structure above.
+We will be able to use `left_curtain_state` as a way to access (with `getr`) and change (with `setr`) different windows.
 
-missal_color = Lens{Altar,:missal}() \circ Lens{Missal,:color}()
-water_status = Lens{Altar,:water_cruet}() \circ Lens{Cruet,:fullness}()
+Lets initialise a `Window`:
 
-Lets initialise an Altar:
+```julia
+my_window = Window("White", Curtain("Purple", "Open"), Curtain("Orange","Shut"))
+```
 
-my_altar = Altar(Missal("Red"), Cruet(0.8), Cruet(0.9))
+Suppose we would like to reach into our `Window` and learn the state of the left curtain. We could write 
 
-suppose we would like to reach in and learn the value of the water cruet's fullness:
-
-We could write 
-
-my_altar.water_cruet.fullness
+```julia
+my_curtain.left_window.state
+```
 
 or we could write
 
-getr(water_status)
+```julia
+getr(left_curtain_state, my_window)
+```
 
-Better yet, suppose we would like to update the Altar, we might consider writing
+Better yet, suppose we would like to update the window and have the left curtain shut. We could write:
 
-my_new_altar = Altar(Missal("Red"), Cruet(0.2), Cruet(0.5))
+```julia
+my_new_window = Window("White", Curtain("Purple", "Shut"), Curtain("Orange","Shut")) 
+```
 
-setr(water_status, my_altar, 0.2)
+or instead
 
-infact, both getr and setr are automatically curried, so we could even write
+```julia
+setr(left_curtain_state, my_window, "Shut")
+```
 
-my_third_altar = my_altar |>
-setr(water_state, 0.5) |> 
-setr(missal_color, "Green")
+In fact, both `getr` and `setr` are automatically curried, so we could even write
+
+```julia
+my_third_window = my_window |>
+setr(left_curtain_state, "Shut") |> 
+setr(left_curtain_color, "Goldish Brown")
+```
+producing a third window based off `my_window` that has its left curtain shut and a new color!
+
+## So what's going on?
+
+The `@lens` macro is doing nothing more that defining a method for the 
+`getr` and `setr` functions for each member of the struct.
+
+For instance, after defining the `Curtain` `struct`, the function `getr(::Lens, a)` is now defined for 
+the `Lens` of types `Lens{Curtain,:state}()` and `Lens{Curtain,:color}()`. In fact their defintions
+are very simple:
+```julia
+function getr(l::Lens{Curtain,:state}, a)
+    a.state
+end
+
+function setr(l::Lens{Curtain,:state}, a, c)
+    Curtain(a.color, c)
+end
+```
+
+By defining these getters and setters for these basic lenses, and then by composing lenses,
+we automatically obtain the correct definition of `getr` (and `setr`) for 
+`Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}`.
