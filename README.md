@@ -75,12 +75,9 @@ producing a third window based off `my_window` that has its left curtain shut an
 
 ## So what's going on?
 
-The `@lens` macro is doing nothing more that defining a method for the 
-`getr` and `setr` functions for each member of the struct.
+The `@lens` macro is doing nothing more that defining a method for the `getr` and `setr` functions for each member of the struct.
 
-For instance, after defining the `Curtain` `struct`, the function `getr(::Lens, a)` is now defined for 
-the `Lens` of types `Lens{Curtain,:state}()` and `Lens{Curtain,:color}()`. In fact their defintions
-are very simple:
+For instance, after defining the `Curtain` `struct`, the function `getr(::Lens, a)` is now defined for the `Lens` of types `Lens{Curtain,:state}()` and `Lens{Curtain,:color}()`. In fact their defintions are very simple:
 ```julia
 function getr(l::Lens{Curtain,:state}, a)
     a.state
@@ -91,6 +88,4 @@ function setr(l::Lens{Curtain,:state}, a, c)
 end
 ```
 
-By defining these getters and setters for these basic lenses, and then by composing lenses,
-we automatically obtain the correct definition of `getr` (and `setr`) for 
-`Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}`.
+By defining these getters and setters for these basic lenses, and then by composing lenses, we automatically obtain the correct definition of `getr` (and `setr`) for `Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}`.
