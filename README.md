@@ -88,4 +88,4 @@ function setr(l::Lens{Curtain,:state}, a, c)
 end
 ```
 
-By defining these getters and setters for these basic lenses, and then by composing lenses, we automatically obtain the correct definition of `getr` (and `setr`) for `Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}`.
+By defining these getters and setters for these basic lenses, and then by composing lenses, we automatically obtain the correct definition of `getr` (and `setr`) for `Lens{Window,:left_curtain}() ○ Lens{Curtain,:state}()`.
