@@ -5,7 +5,7 @@ end
 function lens(ex)
     if ex.head == :struct       # check to see if the expression is a struct
         if ex.args[1] == false      # check to see if it is immutable 
-            struct_name = ex.args[2]    # get the name of the new struct
+            struct_name = get_name(ex.args[2])    # get the name of the new struct
             field_names = Symbol[]      # collect up the names of the fields
             for arg in ex.args[3].args
                 if arg isa Expr
@@ -39,4 +39,13 @@ function lens(ex)
     else
         error("Expected a `struct` expression.")
     end
+end
+
+
+function get_name(s::Symbol)
+   s
+end
+
+function get_name(ex::Expr)
+   ex.args[1]
 end
