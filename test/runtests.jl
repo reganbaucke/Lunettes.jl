@@ -50,14 +50,17 @@ end
 
 @testset "Errors" begin
 
-# set up domain model with structs
-# @lens mutable struct Leaf 
-    # color::String
-# end
+end
 
-# @lens (struct Hello 
-    # color::String
-# end)
+@testset "Macro on Parametric types" begin
+
+@lens struct MyTestStruct{T}
+   my_field::T
+end
+
+@lens struct AnotherTestStruct{T <: Number} 
+   my_field::T
+end
 
 end
 
