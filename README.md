@@ -14,7 +14,59 @@ Simple as!
 
 ## Usage
 
-The package exports one type: a `Lens{F,T}`, read: a `Lens` from `F` to `T`.
+The package exports one type: a `Lens{A,B}`, and two functions: `getr` and `setr`.
+
+Lenses are used to manipulate and query immutable data structures with a convenient notation.
+
+Suppose we have defined the following struct:
+```julia
+struct MyStruct
+    first_field
+    second_field
+end
+```
+
+Let's instantiate two lenses:
+```
+first_field_lens = Lens{MyStruct,:first_field}()
+second_field_lens = Lens{MyStruct,:second_field}()
+```
+
+We can then extend the function `getr` on these types in the following way
+```julia
+function getr(::Lens{MyStruct,:first_field}, a)
+    a.first_field
+end
+function getr(::Lens{MyStruct,:second_field}, a)
+    a.second_field
+end
+```
+and similarly for `setr`
+```julia
+function setr(::Lens{MyStruct,:first_field}, a, c)
+    MyStruct(c, a.second_field)
+end
+function setr(::Lens{MyStruct,:second_field}, a, c)
+    MyStruct(a.first_field, c)
+end
+```
+
+We can now use our lenses in the following way:
+```julia
+my_struct = MyStruct("Hello", 9.9)
+
+getr(first_field, my_struct) == "Hello" #true
+setr(second_field, my_struct, 1.0) == MyStruct("Hello", 1.0)
+```
+
+We have gained not alot for a lot of typing! We will see the power 
+of lenses when we compose them together for manipulating deeply nested
+data structures. 
+
+## The `@lens` macro and composition
+
+`Lunettes` also defines a macro: `@lens`. This macro automatically 
+does the work for us of extending `getr` and `setr` in the obvious way.
 
 ```julia
 @lens struct Curtain
