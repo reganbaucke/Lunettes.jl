@@ -1,3 +1,13 @@
+"""
+   @lens struct Example
+      field_name_a
+   end
+
+This macro will generate for each field of the struct, a `Lens` of the type
+`Lens{Example,:field_name}` where 
+`getr(Lens{Example,:field_name}(), Example(value))` returns `value` and
+`setr(Lens{Example,:field_name}(), Example(value), another_value)` returns `Example(another_value)`.
+"""
 macro lens(ex)
     lens(ex)
 end
