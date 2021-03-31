@@ -103,7 +103,7 @@ my_window = Window("White", Curtain("Purple", "Open"), Curtain("Orange","Shut"))
 Suppose we would like to reach into our `Window` and learn the state of the left curtain. We could write 
 
 ```julia
-my_curtain.left_window.state
+my_window.left_window.state
 ```
 
 or we could write
