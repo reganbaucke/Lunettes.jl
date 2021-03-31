@@ -3,6 +3,15 @@
 Lunettes.jl is a small package for getting and setting fields in large nested
 data structures in a safe, mutation-free, way.
 
+## Installation
+
+In a Julia REPL, run
+```julia
+import Pkg
+Pkg.add("Lunettes")
+```
+Simple as!
+
 ## Usage
 
 The package exports one type: a `Lens{F,T}`, read: a `Lens` from `F` to `T`.
