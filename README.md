@@ -1,5 +1,4 @@
 # Lunettes.jl
-##### A small Lens package for Julia
 
 Lunettes.jl is a small package for getting and setting fields in large nested
 data structures in a safe, mutation-free, way.
