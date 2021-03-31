@@ -59,15 +59,13 @@ getr(first_field, my_struct) == "Hello" #true
 setr(second_field, my_struct, 1.0) == MyStruct("Hello", 1.0)
 ```
 
-We have gained not alot for a lot of typing! We will see the power 
-of lenses when we compose them together for manipulating deeply nested
-data structures. 
+We have gained not alot for a lot of typing! We will see the power of lenses when we compose them together for manipulating deeply nested data structures. 
 
 ## The `@lens` macro and composition
 
-`Lunettes` also defines a macro: `@lens`. This macro automatically 
-does the work for us of extending `getr` and `setr` in the obvious way.
+`Lunettes` also defines a macro: `@lens`. This macro automatically does the work for us of extending `getr` and `setr` in the obvious way.
 
+Consider the complicated nested data structure below. 
 ```julia
 @lens struct Curtain
     color::String
@@ -82,9 +80,7 @@ end
     right_curtain::Curtain
 end
 ```
-
-We have a complicated nested data structure above. Suppose we would like to manipulate this data structure, and make queries of its values.
-
+Suppose we would like to manipulate this data structure, and make queries of its values.
 Let us define a new `Lens` as the composition of two simpler lenses.
 
 ```julia
@@ -95,37 +91,31 @@ left_curtain_color = Lens{Window,:left_curtain}() ○ Lens{Curtain,:color}()
 We will be able to use `left_curtain_state` as a way to access (with `getr`) and change (with `setr`) different windows.
 
 Lets initialise a `Window`:
-
 ```julia
 my_window = Window("White", Curtain("Purple", "Open"), Curtain("Orange","Shut"))
 ```
 
 Suppose we would like to reach into our `Window` and learn the state of the left curtain. We could write 
-
 ```julia
 my_window.left_window.state
 ```
 
 or we could write
-
 ```julia
 getr(left_curtain_state, my_window)
 ```
 
 Better yet, suppose we would like to update the window and have the left curtain shut. We could write:
-
 ```julia
 my_new_window = Window("White", Curtain("Purple", "Shut"), Curtain("Orange","Shut")) 
 ```
 
 or instead
-
 ```julia
 setr(left_curtain_state, my_window, "Shut")
 ```
 
 In fact, both `getr` and `setr` are automatically curried, so we could even write
-
 ```julia
 my_third_window = my_window |>
 setr(left_curtain_state, "Shut") |> 
