@@ -59,7 +59,7 @@ getr(first_field, my_struct) == "Hello" #true
 setr(second_field, my_struct, 1.0) == MyStruct("Hello", 1.0) #true
 ```
 
-We have gained not alot for a lot of typing! We will see the power of lenses when we compose them together for manipulating deeply nested data structures. 
+We have gained not a lot for quite a lot of typing! We will see the power of lenses when we compose them together for manipulating deeply nested data structures. 
 
 ## The `@lens` macro and composition
 
