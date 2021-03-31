@@ -56,7 +56,7 @@ We can now use our lenses in the following way:
 my_struct = MyStruct("Hello", 9.9)
 
 getr(first_field, my_struct) == "Hello" #true
-setr(second_field, my_struct, 1.0) == MyStruct("Hello", 1.0)
+setr(second_field, my_struct, 1.0) == MyStruct("Hello", 1.0) #true
 ```
 
 We have gained not alot for a lot of typing! We will see the power of lenses when we compose them together for manipulating deeply nested data structures. 
